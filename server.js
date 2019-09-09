@@ -2,19 +2,20 @@
 Our Setup - 
 Feel free to ignore all of this and skip to the questions at the end
 =======================================================*/
-// var bodyParser = require('body-parser')
-// var express = require('express')
-// var app = express()
+var bodyParser = require('body-parser')
+var express = require('express')
+var app = express()
 
-// var request = require('request')
-// var mongoose = require('mongoose')
-// var Book = require("./models/BookModel")
-// var Person = require("./models/PersonModel")
+var request = require('request')
+var mongoose = require('mongoose')
+var Book = require("./models/BookModel")
+var Person = require("./models/PersonModel")
 
-// mongoose.connect("mongodb://localhost/mongoose-practice")
+let util = require("util")
+mongoose.connect("mongodb://localhost/mongoose-practice")
 
-// app.use(bodyParser.urlencoded({ extended: false }))
-// app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 
 /*=====================================================
@@ -129,13 +130,6 @@ could you write it differently?
 // })
 
 
-/*=====================================================
-Start the server:
-=======================================================*/
-
-// app.listen(3000, function() {
-//   console.log("Server up and running on port 3000")
-// })
 
 
 /*=====================================================
@@ -153,26 +147,54 @@ and your server is running do the following:
 // db.books.find({$and: [{"pages":{$lt:500}},{"pages":{$gt:200}}]})
 // books: The Dark Tower I, Me Before You, The Catcher in the Rye
 
+//Book.find({$and: [{"pages":{$lt:500}},{"pages":{$gt:200}}]}, function(err, books){console.log(books)})
+
 
 //2. Find books whose rating is less than 5, and sort by the author's name
 // db.books.find({"rating":{$lt:5}}).sort({"author":1})
 
+
+//Book.find({"rating":{$lt:5}}).sort({"author":1}).exec(function(err,books){console.log(books)})
+
 //3. Find all the Fiction books, skip the first 2, and display only 3 of them 
 // db.books.find({"genres":"Fiction"}).skip(2).limit(3)
+
+//Book.find({"genres":"Fiction"}).skip(2).limit(3).exec(function(err,books){console.log(books)})
+
 
 /*People
 ----------------------*/
 //1. Find all the people who are tall (>180) AND rich (>30000)
 //db.people.find({$and: [{"height":{$gt: 180}}, {"salary":{$gt:30000}}]})
 
+//Person.find({$and: [{"height":{$gt: 180}}, {"salary":{$gt:30000}}]}, function(err,people){console.log("These are the rich and tall people:" + people)})
+
 //2. Find all the people who are tall (>180) OR rich (>30000)
 //db.people.find({$or: [{"height":{$gt: 180}}, {"salary":{$gt:30000}}]})
+
+//Person.find({$or: [{"height":{$gt: 180}}, {"salary":{$gt:30000}}]}, function(err, people){console.log(util.inspect(people,false,5))})
 
 //3. Find all the people who have grey hair or eyes, and are skinny (<70)
 // db.people.find({$and:[{"weight":{$lt:70}}, {$or: [{"hair":"grey"},{"eyes":"grey"}]}]})
 
+//Person.find({$and:[{"weight":{$lt:70}}, {$or: [{"hair":"grey"},{"eyes":"grey"}]}]}, function(err, people){console.log(people)})
+
 //4. Find people who have at least 1 kid with grey hair
 // db.people.find({"kids.hair":"grey"})
 
+//Person.find({"kids.hair":"grey"},function(err, people){console.log(util.inspect(people,false,5))})
+
+
 //5. Find all the people who have at least one overweight kid, and are overweight themselves (>100)
 //  db.people.find({$and: [{"weight":{$gt: 100}}, {"kids.weight":{$gt:100}}]})
+
+//Person.find({$and: [{"weight":{$gt: 100}}, {"kids.weight":{$gt:100}}]}, function(err,people){console.log(util.inspect(people,false,5))})
+
+
+/*=====================================================
+Start the server:
+=======================================================*/
+app.listen(3000, function() {
+  console.log("Server up and running on port 3000")
+})
+
